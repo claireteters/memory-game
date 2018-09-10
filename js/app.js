@@ -2,8 +2,15 @@ function domReady() {
     //a list that holds all of my cards//
     let cards = $('.card');
     let counter = 0;
-    let InitialClick = false;
+    let initialClick = false;
     let cardsOpened = [];
+    let matchedCards = 0;
+    let time;
+    let minute = 0;
+    let seconds = 0;
+    let second = 0;
+
+
 
     /*
      * Display the cards on the page
@@ -42,9 +49,9 @@ function domReady() {
     // [card] is each index in the cards array.
     cards.each(function (card) {
         $(cards[card]).on('click', function () {
-            if (InitialClick === false) {
+            if (initialClick === false) {
                 timer();
-                InitialClick = true;
+                initialClick = true;
             }
 
             displaySymbol($(cards[card]));
@@ -67,31 +74,39 @@ function domReady() {
     function openCards(elem) {
         // Checks to see if the previous clicked tile is the same tile the user had allready clicked.
         // if the tile clicked is them EXACT same as the previous then dont push the tile again
-        if (cardsOpened[0] !== elem) {
+        if (cardsOpened.length <= 1 && cardsOpened[0] !== elem) {
             cardsOpened.push(elem);
         }
     }
 
     function checkMatch(elem) {
-        if (cardsOpened.length > 1) {
+        if (cardsOpened.length === 2) {
+            incrementCounter();
             const lastCardOpenedIcon = $(elem).children().attr('class');
-            const previouslyOpenedCardIcon = $(cardsOpened[cardsOpened.length - 2]).children().attr('class');
+
+            const previouslyOpenedCardIcon = $(cardsOpened[0]).children().attr('class');
+
 
             if (lastCardOpenedIcon === previouslyOpenedCardIcon) {
                 $(elem).addClass('match');
+                $(cardsOpened[0]).addClass('match');
                 $(elem).removeClass('clicked');
-                $(cardsOpened[cardsOpened.length - 2]).addClass('match');
-                $(cardsOpened[cardsOpened.length - 2]).removeClass('clicked');
+                $(cardsOpened[0]).removeClass('clicked');
+                matchedCards += 1;
             } else if (lastCardOpenedIcon !== previouslyOpenedCardIcon) {
                 $(elem).removeClass('open show clicked');
                 $(cardsOpened[cardsOpened.length - 2]).removeClass('open show clicked');
+            }
+
+            if (matchedCards === 8) {
+                playerHasWon();
             }
 
             cardsOpened = [];
         }
     }
 
-    function IncrementCounter() {
+    function incrementCounter() {
         counter += 1;
 
         if (counter === 1) {
@@ -108,11 +123,6 @@ function domReady() {
             $('.stars li:last-child').remove();
         }
     }
-
-    let time;
-    let minute = 0;
-    let seconds = 0;
-    let second = 0;
 
     function timer() {
         time = setInterval(function () {
@@ -132,6 +142,13 @@ function domReady() {
             $('.timer').html(`${minute} : ${second}`);
 
         }, 1000);
+    }
+
+    function playerHasWon() {
+        setTimeout(function () {
+            
+            
+        }, );
     }
 
     /*

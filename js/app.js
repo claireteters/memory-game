@@ -10,14 +10,6 @@ function domReady() {
     let seconds = 0;
     let second = 0;
 
-
-
-    /*
-     * Display the cards on the page
-     *   - loop through each card and create its HTML
-     *   - add each card's HTML to the page
-     */
-
     // Shuffle function from http://stackoverflow.com/a/2450976
     function shuffle(array) {
         var currentIndex = array.length, temporaryValue, randomIndex;
@@ -29,40 +21,68 @@ function domReady() {
             array[currentIndex] = array[randomIndex];
             array[randomIndex] = temporaryValue;
         }
-
-        // console.log(array);
         return array;
     }
 
     function beginGame() {
         //using shuffle function to shuffle cards
-        $('.timer').html('00 : 00')
+
+        $('.timer').text('00 : 00')
 
         cards = shuffle(cards);
         for (let card of cards) {
             $('.deck').append(card);
         }
+
+        cards.each(function (card) {
+            $(cards[card]).on('click', function () {
+                if (initialClick === false) {
+                    timer();
+                    initialClick = true;
+                }
+
+                displaySymbol($(cards[card]));
+
+                openCards(cards[card]);
+
+                setTimeout(function () {
+                    checkMatch(cards[card]);
+                }, 320);
+            });
+        });
     }
 
-    beginGame();
+    function restartGame() {
+        counter = 0;
 
-    // [card] is each index in the cards array.
-    cards.each(function (card) {
-        $(cards[card]).on('click', function () {
-            if (initialClick === false) {
-                timer();
-                initialClick = true;
-            }
+        clearInterval(time);
+        
+        time = 0;
+        seconds = 0;
+        minute = 0;
 
-            displaySymbol($(cards[card]));
+        $('.moves').text(counter.toString());
+        $('.timer').text('00 : 00');
 
-            openCards(cards[card]);
+        const starsRemaining = $('.stars').children().length;
+        if (starsRemaining === 2) {
+            $('.stars').append('<li><i class="fa fa-star"></i></li>')
+        } else if (starsRemaining === 1) {
+            $('.stars').append('<li><i class="fa fa-star"></i></li>')
+            $('.stars').append('<li><i class="fa fa-star"></i></li>')
+        }
 
-            setTimeout(function () {
-                checkMatch(cards[card]);
-            }, 320);
+        matchedCards = 0;
+        cardsOpened = [];
+        initialClick = false;
+
+        cards.each(function (index) {
+            $(cards[index]).unbind('click');
+            $(cards[index]).removeClass('clicked open show match');
         });
-    });
+
+        beginGame();
+    }
 
     // If the element passed in doesnt have class show or class match then flip that card.
     function displaySymbol(elem) {
@@ -117,9 +137,9 @@ function domReady() {
 
         $('.moves').text(counter.toString());
 
-        if (counter === 8) {
+        if (counter === 10) {
             $('.stars li:last-child').remove();
-        } else if (counter === 13) {
+        } else if (counter === 15) {
             $('.stars li:last-child').remove();
         }
     }
@@ -145,22 +165,39 @@ function domReady() {
     }
 
     function playerHasWon() {
+        //stop the timer immediately
+        clearInterval(time);
+        var scorePanel = document.getElementById('scorePanel');
+        var span = document.getElementsByClassName('restartButton')[0];
         setTimeout(function () {
-            
-            
+            $('#scorePanel').css({ opacity: 1, visibility: 'visible' });;
+            $('.moves').text(counter.toString());
+            $('.totalTime').text(`Time: ${minute} : ${second}`);
+            var starLength = $('.stars li').length;
+            $('.totalStars').text(`Stars: ${starLength}`);
+            $('.totalMoves').text(`Moves: ${counter}`);
         }, );
+
     }
 
-    /*
-     * set up the event listener for a card. If a card is clicked:
-     *  - display the card's symbol (put this functionality in another function that you call from this one)
-     *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
-     *  - if the list already has another card, check to see if the two cards match
-     *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
-     *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
-     *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
-     *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
-     */
+    //rounded reload game button
+    $('.restart').on('click', function () {
+        restartGame();
+    })
+
+    beginGame();
+
+    // play again button after winning
+    $('.restartButton').on('click', function () {
+        scorePanel.style.display = "none";
+        cards.each(function (index) {
+            $(cards[index]).unbind('click');
+            $(cards[index]).removeClass('clicked open show match');
+        });
+        restartGame();
+        beginGame();
+    })
+    
 };
 
 domReady();

@@ -21,14 +21,12 @@
         		<li><i class="fa fa-star"></i></li>
         		<li><i class="fa fa-star"></i></li>
         		<li><i class="fa fa-star"></i></li>
-        	</ul>
-
-        	<span class="moves">3</span><span class="moves-title"> Moves</span>
-
+            </ul>
+            <span class="moves">0</span><span class="moves-title"> Moves</span>
             <span class="timer"></span>
-            <div class="restart">
+            <span class="restart">
         		<i class="fa fa-repeat"></i>
-        	</div>
+        	</span>
         </section>
 
         <ul class="deck">
@@ -83,14 +81,18 @@
         </ul>
     </div>
 
-    <div id ="myModal" class ="modal">
-            <div class="modalContent">
-                <span class="resetGame">&times;</span>
+    <div id ="scorePanel" class="modal">
+            <div>
                 <h1>Congratulations!</h1>
                 <h3>You've Won!</h3>
+                <h4><span class='totalTime'></span></h4>
+                <h4><span class='totalStars'></span></h4>
+                <h4><span class='totalMoves'></span></h4>
+                <div id="play-again" class="restartButton">Play again!</div>
             </div>
     </div>
 
     <script src="js/app.js"></script>
 </body>
 </html>
+

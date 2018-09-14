@@ -31,6 +31,7 @@ body {
 h1 {
     font-family: 'Open Sans', sans-serif;
     font-weight: 300;
+    cursor: default;
 }
 
 /*
@@ -63,10 +64,12 @@ h1 {
     justify-content: center;
     align-items: center;
     box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
+    transition-duration: 200ms;
 }
 
 .deck .card.open {
     transform: rotateY(0);
+    transition-duration: 200ms;
     background: #02b3e4;
     cursor: default;
 }
@@ -89,6 +92,7 @@ h1 {
     text-align: center;
     width: 400px;
     margin-bottom: 10px;
+    cursor: default;
 }
 
 .score-panel .stars {
@@ -105,6 +109,8 @@ h1 {
 
 .score-panel .restart {
     margin-left: 35px;
+    cursor: pointer;
+    font-size: 20px;
 }
 
 .score-panel .restartButton {
@@ -121,35 +127,29 @@ h1 {
     margin-left: 40px;
 }
 
-#scorePanel {
+/*
+ * Styles for the screen that appears after the player wins the game
+ */
+
+#resultsScreen {
     opacity: 0;
     visibility: hidden;
     width: 50%;
     height: 50%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    display: -webkit-box;
-    display: -ms-flexbox;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
-    -webkit-box-pack: center;
-        -ms-flex-pack: center;
-            justify-content: center;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
-    background: #fff;
-    -webkit-transition: opacity 0.2s ease-in;
-    -o-transition: opacity 0.2s ease-in;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
     transition: opacity 0.2s ease-in;
+    background: #ffffff url('/Users/claire/Desktop/geometry2.png'); /* Background pattern from Subtle Patterns */
+    text-align: center;
 }
   
-  #scorePanel .restartButton {
+#resultsScreen .restartButton {
     background: #02ccba;
     color: #fff;
     font-size: 16px;
@@ -158,19 +158,3 @@ h1 {
     padding: 5px 20px;
     cursor: pointer;
   }
-
-  /* The reset Button */
-.resetGame {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}

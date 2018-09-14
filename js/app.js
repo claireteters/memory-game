@@ -1,10 +1,10 @@
 function domReady() {
     //a list that holds all of my cards//
-    let cards = $('.card');
-    let counter = 0;
+    let allCards = $('.card');
+    let numberOfMoves = 0;
     let initialClick = false;
     let cardsOpened = [];
-    let matchedCards = 0;
+    let matchedCards = 7;
     let time;
     let minute = 0;
     let seconds = 0;
@@ -29,31 +29,34 @@ function domReady() {
 
         $('.timer').text('00 : 00')
 
-        cards = shuffle(cards);
-        for (let card of cards) {
+        allCards = shuffle(allCards);
+        for (let card of allCards) {
             $('.deck').append(card);
         }
 
-        cards.each(function (card) {
-            $(cards[card]).on('click', function () {
+        allCards.each(function (card) {
+            $(allCards[card]).on('click', function () {
                 if (initialClick === false) {
                     timer();
                     initialClick = true;
                 }
 
-                displaySymbol($(cards[card]));
+                displaySymbol($(allCards[card]));
 
-                openCards(cards[card]);
+                openCards(allCards[card]);
 
                 setTimeout(function () {
-                    checkMatch(cards[card]);
+                    checkMatch(allCards[card]);
                 }, 320);
             });
         });
     }
 
     function restartGame() {
-        counter = 0;
+        //  when either of the reset buttons are clicked, the game will reset moves to 0,
+        //  time to 0, stars to 3, reset the memory of matching cards back to 0, and shuffle
+        //  the cards again
+        numberOfMoves = 0;
 
         clearInterval(time);
         
@@ -61,7 +64,7 @@ function domReady() {
         seconds = 0;
         minute = 0;
 
-        $('.moves').text(counter.toString());
+        $('.moves').text(numberOfMoves.toString());
         $('.timer').text('00 : 00');
 
         const starsRemaining = $('.stars').children().length;
@@ -76,45 +79,47 @@ function domReady() {
         cardsOpened = [];
         initialClick = false;
 
-        cards.each(function (index) {
-            $(cards[index]).unbind('click');
-            $(cards[index]).removeClass('clicked open show match');
+        allCards.each(function (index) {
+            $(allCards[index]).unbind('click');
+            $(allCards[index]).removeClass('clicked open show match');
         });
 
         beginGame();
     }
 
     // If the element passed in doesnt have class show or class match then flip that card.
-    function displaySymbol(elem) {
-        if (!elem.hasClass('show') || !elem.hasClass('match') || !elem.hasClass('clicked')) {
-            elem.addClass('open show clicked');
+    function displaySymbol(cardSelected) {
+        if (!cardSelected.hasClass('show') || !cardSelected.hasClass('match') || !cardSelected.hasClass('clicked')) {
+            cardSelected.addClass('open show clicked');
         }
     }
 
-    function openCards(elem) {
+    function openCards(cardSelected) {
         // Checks to see if the previous clicked tile is the same tile the user had allready clicked.
         // if the tile clicked is them EXACT same as the previous then dont push the tile again
-        if (cardsOpened.length <= 1 && cardsOpened[0] !== elem) {
-            cardsOpened.push(elem);
+        if (cardsOpened.length <= 1 && cardsOpened[0] !== cardSelected) {
+            cardsOpened.push(cardSelected);
         }
     }
 
-    function checkMatch(elem) {
+    function checkMatch(cardSelected) {
+        // checks to see if the  first card opened matches the second card opened. if
+        //  it does, it will save it as a matching card.
         if (cardsOpened.length === 2) {
             incrementCounter();
-            const lastCardOpenedIcon = $(elem).children().attr('class');
+            const lastCardOpenedIcon = $(cardSelected).children().attr('class');
 
             const previouslyOpenedCardIcon = $(cardsOpened[0]).children().attr('class');
 
 
             if (lastCardOpenedIcon === previouslyOpenedCardIcon) {
-                $(elem).addClass('match');
+                $(cardSelected).addClass('match');
                 $(cardsOpened[0]).addClass('match');
-                $(elem).removeClass('clicked');
+                $(cardSelected).removeClass('clicked');
                 $(cardsOpened[0]).removeClass('clicked');
                 matchedCards += 1;
             } else if (lastCardOpenedIcon !== previouslyOpenedCardIcon) {
-                $(elem).removeClass('open show clicked');
+                $(cardSelected).removeClass('open show clicked');
                 $(cardsOpened[cardsOpened.length - 2]).removeClass('open show clicked');
             }
 
@@ -127,24 +132,28 @@ function domReady() {
     }
 
     function incrementCounter() {
-        counter += 1;
+        // counts the number of moves the player makes while playing, and based on the 
+        // number of moves, the stars will decrease the higher the number of moves the 
+        // player makes
+        numberOfMoves += 1;
 
-        if (counter === 1) {
+        if (numberOfMoves === 1) {
             $('.moves-title').text(' Move');
         } else {
             $('.moves-title').text(' Moves');
         }
 
-        $('.moves').text(counter.toString());
+        $('.moves').text(numberOfMoves.toString());
 
-        if (counter === 10) {
+        if (numberOfMoves === 10) {
             $('.stars li:last-child').remove();
-        } else if (counter === 15) {
+        } else if (numberOfMoves === 15) {
             $('.stars li:last-child').remove();
         }
     }
 
     function timer() {
+        // timer function
         time = setInterval(function () {
             seconds += 1;
 
@@ -167,21 +176,26 @@ function domReady() {
     function playerHasWon() {
         //stop the timer immediately
         clearInterval(time);
-        var scorePanel = document.getElementById('scorePanel');
-        var span = document.getElementsByClassName('restartButton')[0];
+        var resultsScreen = document.getElementById('resultsScreen');
+        var playAgain = document.getElementsByClassName('restartButton')[0];
+
         setTimeout(function () {
-            $('#scorePanel').css({ opacity: 1, visibility: 'visible' });;
-            $('.moves').text(counter.toString());
+            $('#resultsScreen').css({ opacity: 1, visibility: 'visible' });;
+            $('.moves').text(numberOfMoves.toString());
             $('.totalTime').text(`Time: ${minute} : ${second}`);
             var starLength = $('.stars li').length;
             $('.totalStars').text(`Stars: ${starLength}`);
-            $('.totalMoves').text(`Moves: ${counter}`);
-        }, );
+            $('.totalMoves').text(`Moves: ${numberOfMoves}`);
+            allCards.each(function (index) {
+                $(allCards[index]).unbind('click');
+            });
+        }, 320);
 
     }
 
     //rounded reload game button
     $('.restart').on('click', function () {
+        resultsScreen.style.visibility = "hidden";
         restartGame();
     })
 
@@ -189,13 +203,8 @@ function domReady() {
 
     // play again button after winning
     $('.restartButton').on('click', function () {
-        scorePanel.style.display = "none";
-        cards.each(function (index) {
-            $(cards[index]).unbind('click');
-            $(cards[index]).removeClass('clicked open show match');
-        });
+        resultsScreen.style.visibility = "hidden";
         restartGame();
-        beginGame();
     })
     
 };

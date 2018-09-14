@@ -4,7 +4,7 @@ function domReady() {
     let numberOfMoves = 0;
     let initialClick = false;
     let cardsOpened = [];
-    let matchedCards = 7;
+    let matchedCards = 0;
     let time;
     let minute = 0;
     let seconds = 0;

@@ -55,7 +55,7 @@ h1 {
 .deck .card {
     height: 125px;
     width: 125px;
-    background: #2e3d49;
+    background: #307a93;
     font-size: 0;
     color: #ffffff;
     border-radius: 8px;
@@ -63,14 +63,14 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
-    transition-duration: 200ms;
+    box-shadow: 5px 2px 20px 0 rgb(102, 102, 153);
+    transition-duration: 300ms;
 }
 
 .deck .card.open {
     transform: rotateY(0);
     transition-duration: 200ms;
-    background: #02b3e4;
+    background: #307a93;
     cursor: default;
 }
 
@@ -116,7 +116,6 @@ h1 {
 .score-panel .restartButton {
     float: right;
     cursor: pointer;
-    background: #02ccba;
     color: #fff;
     font-size: 16px;
     font-weight: bold;

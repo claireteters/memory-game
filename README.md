@@ -3,17 +3,10 @@
 ## Table of Contents
 
 * [Instructions](#instructions)
-* [Contributing](#contributing)
+
 
 ## Instructions
-
-The starter project has some HTML and CSS styling to display a static version of the Memory Game project. You'll need to convert this project from a static project to an interactive one. This will require modifying the HTML and CSS files, but primarily the JavaScript file.
-
-To get started, open `js/app.js` and start building out the app's functionality
-
-For specific, detailed instructions, look at the project instructions in the [Udacity Classroom](https://classroom.udacity.com/me).
-
-## Contributing
-
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
-
+Play the game!
+Click on any tile you would like and try to find its match. The game will begin to record the number of moves you make to try and win, keep track of your time, and rank you with stars depending on 
+how many moves you make!
+At the end you will be able to see your overall final outcome of how well you played, and have the opportunity to play again!
